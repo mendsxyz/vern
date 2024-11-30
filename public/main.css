@@ -1,0 +1,9 @@
+.navmenu {
+  opacity: 0;
+  visibility: hidden;
+}
+.navmenu.visible {
+  opacity: 1;
+  visibility: visible;
+  z-index: 10!important;
+}
