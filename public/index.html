@@ -21,19 +21,29 @@
 </head>
 
 <body>
+  <template>
+    <!-- Verification tick ms icon: new_releases -->
+  </template>
+
   <header class="w-full bg-white px-6 py-3 border-b border-solid flex items-center justify-between fixed top-0 left-0 z-20">
     <div class="grid grid-flow-col auto-cols-max items-center justify-items-start gap-4">
       <img src="assets/favicon/vern-logo.png" alt="vern logo" class="w-8">
     </div>
-    <div class="navmenu-toggle flex items-center justify-center">
-      <span class="ms-rounded">dropdown</span>
+    <div class="grid grid-flow-col auto-cols-max items-center justify-items-start gap-6">
+      <div class="search-toogle flex items-center justify-center">
+        <span class="ms-rounded">search</span>
+      </div>
+      <div class="navmenu-toggle flex items-center justify-center">
+        <span class="ms-rounded">more_vert</span>
+      </div>
     </div>
   </header>
+
   <nav class="navmenu w-2/4 border border-solid rounded-lg p-4 fixed -z-1 bg-white" style="top: 63px; right: 0.5rem">
     <div class="navlinks grid grid-flow-row gap-0 w-full">
       <div class="navlink w-full py-2 flex items-center justify-start gap-2">
-        <span class="ms-rounded">home</span>
-        <div class="text-2sm font-light">Home</div>
+        <span class="ms-rounded">newsstand</span>
+        <div class="text-2sm font-light">Reads</div>
       </div>
       <div class="navlink w-full py-2 flex items-center justify-start gap-2">
         <span class="ms-rounded">face</span>
@@ -42,6 +52,9 @@
     </div>
   </nav>
 
+  <main>
+
+  </main>
   <script src="main.js"></script>
 </body>
 
