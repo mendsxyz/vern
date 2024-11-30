@@ -1,3 +1,3 @@
-import post from 'json/posts.json' assert { type: 'json' };
-
-console.log("post");
+fetch("data/posts.json")
+  .then((response) => response.json())
+  .then((json) => console.log(json.id));
