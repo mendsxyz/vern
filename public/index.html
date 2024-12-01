@@ -49,11 +49,65 @@
         <span class="ms-rounded">face</span>
         <div class="text-2sm font-light">My profile</div>
       </div>
+      <div class="navlink w-full py-2 flex items-center justify-start gap-2">
+        <span class="ms-rounded">web_traffic</span>
+        <div class="text-2sm font-light">Advertise</div>
+      </div>
     </div>
   </nav>
 
   <main>
+    <div class="content-tabs border-b border-solid w-full px-4 grid grid-flow-col items-center justify-start gap-6">
+      <div class="content-tab py-2 active" data-tab="for-you">
+        <span class="text-2sm">For you</span>
+      </div>
+      <div class="content-tab py-2" data-tab="favorite">
+        <span class="text-2sm">Favorites</span>
+      </div>
+    </div>
+    <div class="content-wrapper w-full py-6">
+      <div class="content w-full active" data-tab="for-you">
+        <div class="post-card w-full p-4 grid grid-flow-row content-center justify-start gap-2">
+          <div class="w-full flex items-center justify-left gap-4">
+            <img src="" alt="user profile icon">
+            <div class="author-post-info">name</div>
+          </div>
+          <div class="w-full grid grid-flow-col items-center justify-start gap-4">
+            <div class="w-full grid grid-flow-row gap-2">
+              <div class="text-2xl font-bold leading-none">Some Catchy Header</div>
+              <div class="text-sm font-light leading-snug">Some definitive description about any subject matter being discussed</div>
+            </div>
+            <img class="post-image" src="assets/post-img/post-img.png" alt="post image">
+          </div>
+          <div class="w-full flex items-center justify-between">
+            <div class="w-full flex items-center justify-left gap-4">
+              <div class="flex items-center justify-left gap-0">
+                <span class="ms-rounded">bar_chart</span>
+                <div class="text-xs font-light">500</div>
+              </div>
+              <div class="flex items-center justify-left gap-1">
+                <span class="ms-rounded xs">thumb_up</span>
+                <div class="text-xs font-light">800</div>
+              </div>
+              <div class="flex items-center justify-left gap-0">
+                <span class="ms-rounded xs">bookmark</span>
+                <div class="text-xs font-light">800</div>
+              </div>
+            </div>
+            <div class="items-center justify-left gap-0">
+              <div class="flex items-center justify-left">
+                <span class="ms-rounded xs">add_circle</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="content w-full" data-tab="favorite">
+        No favorites yet
 
+
+      </div>
+    </div>
   </main>
   <script src="main.js"></script>
 </body>

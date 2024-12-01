@@ -1,9 +1,66 @@
+*,html,body {
+  -webkit-tap-highlight-color: transparent!important;
+}
+
+::-webkit-scrollbar {
+  display: none!important;
+}
+
 .navmenu {
   opacity: 0;
   visibility: hidden;
 }
+
 .navmenu.visible {
   opacity: 1;
   visibility: visible;
   z-index: 10!important;
+}
+
+main {
+  width: 100%;
+  min-height: 95vh;
+  padding: 60px 0;
+}
+
+.content-tabs {
+  overflow: auto;
+}
+
+.content-tab {
+  border: 0;
+  white-space: nowrap;
+}
+
+.content-tab:hover {
+  border-bottom: 1px solid #DF0F0F;
+}
+
+.content-tab.active {
+  border-bottom: 1px solid #DF0F0F;
+}
+
+.content-tab span {
+  font-weight: 300;
+}
+
+.content-tab.active span {
+  font-weight: bold;
+}
+
+.content {
+  display: none;
+}
+
+.content.active {
+  background: rgba(0,0,0,0.08);
+  display: grid;
+}
+
+.post-card {
+  background: white;
+}
+
+.post-card:not(:last-child) {
+  border-bottom: 1px solid rgba(0,0,0,0.08);
 }
