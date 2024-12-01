@@ -1,7 +1,3 @@
-fetch("data/posts.json")
-  .then((response) => response.json())
-  .then((json) => console.log(json.id));
-
 // Nav-menu and toggle
 
 const nav = {
@@ -60,7 +56,7 @@ let maxBodyLength = 59;
 
 function forYouPost(obj) {
   return `
-    <div class="post-card w-full p-4 grid grid-flow-row content-center justify-start gap-2">
+    <div class="post-card for-you-post w-full p-4 grid grid-flow-row content-center justify-start gap-2">
       <div class="w-full flex items-center justify-left gap-2">
         <img src="${obj.author_pfp}" alt="user profile icon" class="user-profile-icon">
         <div class="author-post-info text-sm">${obj.author_name}</div>
@@ -105,4 +101,15 @@ function favoritePost(obj) {
 
 fetch("data/posts.json")
   .then((response) => response.json())
-  .then(data => renderCards(data));
+  .then(data => {
+    renderCards(data);
+    
+    // Expanding fyp posts
+    
+    const fypCards = document.querySelectorAll(".post-card");
+    fypCards.forEach(card => {
+      card.addEventListener("click", () => {
+        console.log("exists")
+      })
+    })
+  });
