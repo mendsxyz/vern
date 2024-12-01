@@ -52,34 +52,38 @@ function renderCards(data) {
 
 // Post card html
 
+let maxHeaderLength = 70;
 let maxBodyLength = 59;
 
 function forYouPost(obj) {
   return `
-    <div class="post-card for-you-post w-full p-4 grid grid-flow-row content-center justify-start gap-2">
+    <div class="post-card p-4 grid grid-flow-row grid-cols-1 content-start justify-start gap-2 w-full" data-post="${obj.id}">
       <div class="w-full flex items-center justify-left gap-2">
-        <img src="${obj.author_pfp}" alt="user profile icon" class="user-profile-icon">
-        <div class="author-post-info text-sm">${obj.author_name}</div>
+        <img src="${obj.author_pfp}" alt="author's profile icon" class="author-pfp">
+        <div class="author-name text-sm">${obj.author_name}</div>
       </div>
-      <div class="w-full grid grid-flow-col items-center justify-start gap-4">
+      <div class="w-full flex items-center justify-between gap-4">
         <div class="w-full grid grid-flow-row gap-2">
-          <div class="post-header text-2xl font-bold leading-none">${obj.header}</div>
+          <div class="post-header-uncut" hidden>${obj.header}</div>
+          <div class="post-body-uncut" hidden>${obj.body}</div>
+          
+          <div class="post-header text-xl font-semibold leading-header">${obj.header.length > maxHeaderLength ? obj.header.substring(0, maxHeaderLength) + "..." : obj.header}</div>
           <div class="post-body text-sm font-light leading-snug">${obj.body.length > maxBodyLength ? obj.body.substring(0, maxBodyLength) + "..." : obj.body}</div>
         </div>
         <img class="post-image" src="assets/post-img/post-img.png" alt="post image">
       </div>
       <div class="w-full flex items-center justify-between">
         <div class="w-full flex items-center justify-left gap-4">
-          <div class="flex items-center justify-left gap-0">
+          <div class="impressions flex items-center justify-left gap-0">
             <span class="ms-rounded xs">bar_chart</span>
             <div class="text-xs font-light">${obj.impressions}</div>
           </div>
-          <div class="flex items-center justify-left gap-1">
-            <span class="ms-rounded xs">thumb_up</span>
+          <div class="likes flex items-center justify-left gap-1">
+            <span class="ms-rounded xs thumb">thumb_up</span>
             <div class="text-xs font-light">${obj.likes}</div>
           </div>
-          <div class="flex items-center justify-left gap-0">
-            <span class="ms-rounded xs">bookmark</span>
+          <div class="favorites flex items-center justify-left gap-0">
+            <span class="ms-rounded xs fav">bookmark</span>
             <div class="text-xs font-light">${obj.favorites}</div>
           </div>
         </div>
@@ -99,17 +103,105 @@ function favoritePost(obj) {
   `
 }
 
+// Full post content
+
+const fullContent = document.querySelector(".full-content");
+
+const collapseContent = fullContent.querySelector(".collapse-content");
+
+let content;
+
 fetch("data/posts.json")
   .then((response) => response.json())
   .then(data => {
     renderCards(data);
-    
+
     // Expanding fyp posts
-    
+
     const fypCards = document.querySelectorAll(".post-card");
+
     fypCards.forEach(card => {
-      card.addEventListener("click", () => {
-        console.log("exists")
+      card.addEventListener("click", (e) => {
+        fullContent.classList.add("active");
+
+        const elements = {
+          id: card.dataset.post,
+          author_pfp: card.querySelector(".author-pfp").getAttribute("src"),
+          author_name: card.querySelector(".author-name").textContent,
+          header: card.querySelector(".post-header-uncut").textContent,
+          body: card.querySelector(".post-body-uncut").textContent,
+          img: card.querySelector(".post-image").getAttribute("src"),
+
+          impressions: card.querySelector(".impressions").outerHTML,
+          likes: card.querySelector(".likes").outerHTML,
+          favorites: card.querySelector(".favorites").outerHTML
+        }
+
+        content = `
+          <div class="content-blob grid grid-flow-row gap-4" data-blob="${elements.id}">
+            <div class="w-full flex items-center justify-left gap-3">
+              <img src="${elements.author_pfp}" alt="author's profile photo" class="w-1/6 rounded-full">
+              <div class="grid grid-flow-row content-start justify-start gap-1">
+                <span class="text-2sm font-medium">${elements.author_name} • <a href="#" class="text-red-600">Follow</a></span>
+                <span class="text-sm font-light">Posted 2 days ago</span>
+              </div>
+            </div>
+            
+            <div class="w-full grid grid-flow-row content-start justify-start gap-2">
+              <span class="text-2xl font-semibold leading-header">${elements.header}</span>
+              <span class="text-3sm font-light">${elements.body}</span>
+              <img src="${elements.img}" alt="post image" class="w-full rounded my-4">
+            </div>
+            
+            <div class="w-full bg-white border-t border-solid px-16 py-4 flex items-center justify-between gap-4 fixed bottom-0 left-0">
+              ${elements.impressions}
+              ${elements.likes}
+              ${elements.favorites}
+            </div>
+          </div>
+        `;
+
+        fullContent.insertAdjacentHTML("beforeend", content);
+
+        // Liking content
+
+        const thumbs = fullContent.querySelectorAll(".likes .thumb");
+
+        thumbs.forEach(thumb => {
+          thumb.addEventListener("click", () => {
+            thumb.classList.toggle("ms-filled");
+            
+            const card = thumb.closest(".post-card");
+            
+            const postId = card.dataset.post;
+            
+            console.log(postId);
+          })
+        });
+        
+        // Favoriting content
+        
+        const favs = fullContent.querySelectorAll(".favorites .fav");
+
+        favs.forEach(fav => {
+          fav.addEventListener("click", () => {
+            fav.classList.toggle("ms-filled");
+          })
+        });
+        
+        // Collapsing full content
+        
+        collapseContent.addEventListener("click", () => {
+          fullContent.classList.remove("active");
+
+          const existing = {
+            content: document.querySelector(".content-blob")
+          }
+
+          if (existing.content) {
+            existing.content.remove();
+          }
+        })
       })
     })
   });

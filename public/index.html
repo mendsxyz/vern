@@ -58,10 +58,10 @@
 
   <main>
     <div class="content-tabs border-b border-solid w-full px-4 grid grid-flow-col items-center justify-start gap-6">
-      <div class="content-tab py-2 active" data-tab="for-you">
+      <div class="content-tab py-3 active" data-tab="for-you">
         <span class="text-2sm">For you</span>
       </div>
-      <div class="content-tab py-2" data-tab="favorite">
+      <div class="content-tab py-3" data-tab="favorite">
         <span class="text-2sm">Favorites</span>
       </div>
     </div>
@@ -71,7 +71,14 @@
     </div>
     
     <!-- Full post body -->
-    <div class="full-content bg-white active">Full content</div>
+    <div class="full-content bg-white">
+      <div class="w-full py-4">
+        <button class="collapse-content flex items-center justify-left gap-3">
+          <span class="ms-rounded">arrow_back</span>
+          <span class="text-sm">Back</span>
+        </button>
+      </div>
+    </div>
   </main>
   <script src="main.js"></script>
 </body>
