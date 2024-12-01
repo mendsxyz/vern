@@ -64,3 +64,13 @@ main {
 .post-card:not(:last-child) {
   border-bottom: 1px solid rgba(0,0,0,0.08);
 }
+
+.user-profile-icon {
+  width: 26px;
+  height: auto;
+  border-radius: 100%;
+}
+
+.post-image {
+  border-radius: 0.65rem;
+}

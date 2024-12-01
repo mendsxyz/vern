@@ -47,6 +47,9 @@
   text-rendering: optimizeLegibility;
   font-feature-settings: "liga";
 }
+.ms-rounded.xs {
+  font-size: 16px;
+}
 
 @font-face {
   font-family: "Material Symbols Sharp";

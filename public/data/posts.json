@@ -1,8 +1,22 @@
 {
-  "post1": {
-    "id": 500
+  "p1": {
+    "id": 500,
+    "author_pfp": "assets/img/pfp.png",
+    "author_name": "Mendsxyz",
+    "header": "XRP price sees another 54% surge",
+    "body": "There's more to watch out for as we approach EOY and maybe accumulating just now we have the time to is the best idea",
+    "impressions": 750,
+    "likes": 250,
+    "favorites": 59
   },
-  "post2": {
-    "id": 600
+  "p2": {
+    "id": 600,
+    "author_pfp": "assets/img/pfp.png",
+    "author_name": "Mendsxyz",
+    "header": "DOGE price sees another 17% surge",
+    "body": "There's more to watch out for as we approach EOY",
+    "impressions": 400,
+    "likes": 140,
+    "favorites": 14
   }
 }
