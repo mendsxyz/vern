@@ -50,6 +50,9 @@
 .ms-rounded.xs {
   font-size: 16px;
 }
+.ms-rounded.sm {
+  font-size: 18px;
+}
 
 @font-face {
   font-family: "Material Symbols Sharp";

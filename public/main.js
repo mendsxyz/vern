@@ -60,7 +60,10 @@ function forYouPost(obj) {
     <div class="post-card p-4 grid grid-flow-row grid-cols-1 content-start justify-start gap-2 w-full" data-post="${obj.id}">
       <div class="w-full flex items-center justify-left gap-2">
         <img src="${obj.author_pfp}" alt="author's profile icon" class="author-pfp">
-        <div class="author-name text-sm">${obj.author_name}</div>
+        <div class="author-name text-sm flex items-center justify-left gap-1">
+          <span>${obj.author_name}</span>
+          <span class="ms-rounded xs ms-filled text-red-300">new_releases</span>
+        </div>
       </div>
       <div class="w-full flex items-center justify-between gap-4">
         <div class="w-full grid grid-flow-row gap-2">
@@ -107,6 +110,7 @@ function favoritePost(obj) {
 
 const fullContent = document.querySelector(".full-content");
 
+if (fullContent) {
 const collapseContent = fullContent.querySelector(".collapse-content");
 
 let content;
@@ -127,7 +131,7 @@ fetch("https://mendsxyz.github.io/vern-db/db.json")
         const elements = {
           id: card.dataset.post,
           author_pfp: card.querySelector(".author-pfp").getAttribute("src"),
-          author_name: card.querySelector(".author-name").textContent,
+          author_name: card.querySelector(".author-name").innerHTML,
           header: card.querySelector(".post-header-uncut").textContent,
           body: card.querySelector(".post-body-uncut").textContent,
           img: card.querySelector(".post-image").getAttribute("src"),
@@ -142,7 +146,7 @@ fetch("https://mendsxyz.github.io/vern-db/db.json")
             <div class="w-full flex items-center justify-left gap-3">
               <img src="${elements.author_pfp}" alt="author's profile photo" class="w-1/6 rounded-full">
               <div class="grid grid-flow-row content-start justify-start gap-1">
-                <span class="text-2sm font-medium">${elements.author_name} • <a href="#" class="text-red-600">Follow</a></span>
+                <span class="text-2sm font-medium flex items-center gap-1">${elements.author_name} • <a href="#" class="text-red-600">Follow</a></span>
                 <span class="text-sm font-light">Posted 2 days ago</span>
               </div>
             </div>
@@ -246,3 +250,4 @@ fetch("https://mendsxyz.github.io/vern-db/db.json")
       })
     })
   });
+}
