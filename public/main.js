@@ -197,6 +197,9 @@ fetch("https://mendsxyz.github.io/vern-db/db.json")
                 const matchingObj = Object.values(data).find(p => p.id == postId);
                 matchingObj.likes += 1;
                 
+                const jsonData = JSON.stringify(matchingObj, null, 2);
+                const encodedJsonData = btoa(jsonData);
+                
                 const token = "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";
                 
                 fetch("https://mendsxyz.github.io/vern-db/db.json", {
@@ -206,14 +209,14 @@ fetch("https://mendsxyz.github.io/vern-db/db.json")
                     "Content-Type": "application/json"
                   },
                   body: JSON.stringify({
-                    message: "UPDATE json data",
-                    content: btoa(JSON.stringify(data)),
+                    message: "Update JSON data",
+                    content: encodedJsonData,
                     branch: "main"
                   })
                 })
                 .then(response => response.json())
                 .then(updatedData => console.log(updatedData))
-                .catch(err => console.log(err));
+                .catch(error => console.log("An error occurred!\n" + error));
 
                 const likesCount = card.querySelector(".likes-count");
 
