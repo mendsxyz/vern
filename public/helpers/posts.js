@@ -6,7 +6,7 @@ const post = {
 }
 
 let id_ = localStorage.getItem("addedBodyId");
-id_ ? id_ = [] : (id_ = JSON.parse(id_));
+id_ ? (id_ = JSON.parse(id_)) : id_ = [];
 
 const ct = {
   header: post.form.querySelector("#postHeader"),
@@ -17,11 +17,12 @@ const ct = {
 
 post.form.addEventListener("submit", (e) => {
   e.preventDefault();
-  
+
+  /*
   const textareas = {
     header: document.querySelector("#postHeaderTextarea").textContent,
     body: document.querySelector("#postBodyTextarea").textContent,
-    images: document.querySelectorAll(".output")
+    images: Array.from(document.querySelectorAll(".output"))
   }
 
   const addedBodies = {};
@@ -50,20 +51,64 @@ post.form.addEventListener("submit", (e) => {
     "id": Math.floor(500 * Math.random()).toFixed(0),
     "header": ct.header.value,
     "body": ct.body.value + "\n" + addedBody,
-    "images": textareas.images.forEach(img => img.outerHTML), //? textareas.images.forEach(img => img.getAttribute("src")) : "no image src found",
+    "images": textareas.images.map(img => img.getAttribute("src")),
     "impressions": 0,
     "likes": 0,
     "favorites": 0
   }
   
   console.log(newPost);
+  */
+
+  const textareas = {
+    header: document.querySelector("#postHeaderTextarea").textContent,
+    body: document.querySelector("#postBodyTextarea").textContent,
+  }
+
+  const addedBodies = {};
+  id_.forEach((id) => {
+    const textarea = document.querySelector(`#postBodyTextarea-${id}`);
+    if (textarea) {
+      addedBodies[`body${id}`] = textarea.textContent;
+    }
+  });
+
+  async function createNewPost() {
+    const elements = Array.from(document.querySelector(".post-content").children);
+    const bodyElements = await Promise.all(elements.map(async (element) => {
+      if (element.tagName === "IMG") {
+        const response = await fetch(element.src);
+        const blob = await response.blob();
+        const reader = new FileReader();
+        return new Promise((resolve) => {
+          reader.onload = () => {
+            resolve(reader.result);
+          };
+          reader.readAsDataURL(blob);
+        });
+      } else if (element.tagName === "input") {
+        return element.value;
+      }
+    }));
+    const newPost = {
+      "id": Math.floor(500 * Math.random()).toFixed(0),
+      "header": textareas.header,
+      "body": bodyElements.join("\n"),
+      "impressions": 0,
+      "likes": 0,
+      "favorites": 0
+    }
+    console.log(newPost);
+  }
+
+  createNewPost();
 });
 
 // Adding images
 
 ct.addImage.addEventListener("click", () => {
   const id = Math.floor(500 * Math.random()).toFixed(0);
-  
+
   let imageUpload = `
     <div class="image-upload w-full flex items-center justify-center flex-col gap-3">
       <input type="file" accept="image/*" class="image-inp" id="image-${id}" style="display: none;">
@@ -79,13 +124,14 @@ ct.addImage.addEventListener("click", () => {
       <img class="output w-full rounded-lg">
     </div>
   `;
-  
+
   post.ct.insertAdjacentHTML("beforeend", imageUpload);
 
   const imageInp = post.ct.querySelectorAll(".image-inp");
   const imageOutput = post.ct.querySelectorAll(".output");
 
   const loadFile = function(event) {
+    event.preventDefault();
     const index = Array.prototype.indexOf.call(imageInp, event.target);
     imageOutput[index].src = URL.createObjectURL(event.target.files[0]);
   };
@@ -93,9 +139,9 @@ ct.addImage.addEventListener("click", () => {
   imageInp.forEach((inp, index) => {
     inp.addEventListener("change", loadFile);
   });
-  
+
   // Removing images
-  
+
   post.ct.addEventListener("click", (e) => {
     if (e.target.classList.contains("remove-image")) {
       const imageBlobToRemove = e.target.closest(".image-upload");
@@ -115,6 +161,6 @@ ct.addText.addEventListener("click", () => {
     <input type="text" name="Post body" id="postBody-${id}" hidden>
     <div id="postBodyTextarea-${id}" class="w-full bg-gray-100 pl-3 py-2 h-40 border-l border-solid font-light" contenteditable="true"></div>
   `;
-  
+
   post.ct.insertAdjacentHTML("beforeend", newTextbox);
 });
