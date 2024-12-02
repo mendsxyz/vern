@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 const updateJson = async (req: NextApiRequest, res: NextApiResponse) => {
   const jsonData = req.body;
   const octokit = new Octokit({
-    baseUrl: "https://api.github.com",
+    baseUrl: "https://api.github.com/",
     accessToken: "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"
   });
 
