@@ -18,6 +18,7 @@
   <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
   <link rel="stylesheet" href="../assets/icon/ms.css">
   <link rel="stylesheet" href="../main.css">
+  <script src="https://cdn.ckeditor.com/4.25.0-lts/standard/ckeditor.js"></script>
 </head>
 
 <body>
@@ -76,7 +77,7 @@
             <span class="text-sm font-light">— 500 characters min</span>
           </label>
           <input type="text" name="Post body" id="postBody" hidden>
-          <div id="postBodyTextarea" class="w-full bg-gray-100 pl-3 py-2 h-40 border-l border-solid font-light" contenteditable="true"></div>
+          <textarea name="content" id="postBodyTextarea" class="w-full bg-gray-100 pl-3 py-2 h-40 border-l border-solid font-light"></textarea>
         </div>
         <div class="w-full grid grid-flow-col gap-3 mt-4">
           <button id="addImage" class="py-2 px-4 border border-solid border-red-300 text-red-600 flex items-center justify-center gap-2 rounded-lg">
@@ -99,6 +100,9 @@
   </main>
   <script src="../main.js"></script>
   <script src="../helpers/posts.js"></script>
+  <script>
+    CKEDITOR.replace("content");
+  </script>
 </body>
 
 </html>
