@@ -197,12 +197,19 @@ fetch("https://mendsxyz.github.io/vern-db/db.json")
                 const matchingObj = Object.values(data).find(p => p.id == postId);
                 matchingObj.likes += 1;
                 
+                const token = "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";
+                
                 fetch("https://mendsxyz.github.io/vern-db/db.json", {
                   method: "PUT",
                   headers: {
+                    "Authorization": `Bearer ${token}`,
                     "Content-Type": "application/json"
                   },
-                  body: JSON.stringify(data)
+                  body: JSON.stringify({
+                    message: "UPDATE json data",
+                    content: btoa(JSON.stringify(data)),
+                    branch: "main"
+                  })
                 })
                 .then(response => response.json())
                 .then(updatedData => console.log(updatedData))
