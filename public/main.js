@@ -111,7 +111,7 @@ const collapseContent = fullContent.querySelector(".collapse-content");
 
 let content;
 
-fetch("https://mendsxyz.github.io/vern-db/db.json")
+fetch("https://jsonkeeper.com/b/MBJ5")
   .then((response) => response.json())
   .then(data => {
     renderCards(data);
@@ -202,17 +202,12 @@ fetch("https://mendsxyz.github.io/vern-db/db.json")
                 
                 const token = "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";
                 
-                fetch("https://mendsxyz.github.io/vern-db/db.json", {
-                  method: "PUT",
+                fetch("", {
+                  method: "POST",
                   headers: {
-                    "Authorization": `Bearer ${token}`,
                     "Content-Type": "application/json"
                   },
-                  body: JSON.stringify({
-                    message: "Update JSON data",
-                    content: encodedJsonData,
-                    branch: "main"
-                  })
+                  body: encodedJsonData
                 })
                 .then(response => response.json())
                 .then(updatedData => console.log(updatedData))
