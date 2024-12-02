@@ -92,7 +92,6 @@ main {
   opacity: 1;
   visibility: visible;
   z-index: 9;
-  overflow-y: auto;
 }
 
 main:has(.full-content.active) .content {

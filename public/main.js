@@ -80,11 +80,11 @@ function forYouPost(obj) {
           </div>
           <div class="likes flex items-center justify-left gap-1">
             <span class="ms-rounded xs thumb">thumb_up</span>
-            <div class="text-xs font-light">${obj.likes}</div>
+            <div class="text-xs font-light likes-count">${obj.likes}</div>
           </div>
           <div class="favorites flex items-center justify-left gap-0">
             <span class="ms-rounded xs fav">bookmark</span>
-            <div class="text-xs font-light">${obj.favorites}</div>
+            <div class="text-xs font-light fav-count">${obj.favorites}</div>
           </div>
         </div>
         <div class="items-center justify-left gap-0">
@@ -111,7 +111,7 @@ const collapseContent = fullContent.querySelector(".collapse-content");
 
 let content;
 
-fetch("data/posts.json")
+fetch("https://mendsxyz.github.io/vern-db/db.json")
   .then((response) => response.json())
   .then(data => {
     renderCards(data);
@@ -138,7 +138,7 @@ fetch("data/posts.json")
         }
 
         content = `
-          <div class="content-blob grid grid-flow-row gap-4" data-blob="${elements.id}">
+          <div class="content-blob grid grid-flow-row gap-4" data-post="${elements.id}">
             <div class="w-full flex items-center justify-left gap-3">
               <img src="${elements.author_pfp}" alt="author's profile photo" class="w-1/6 rounded-full">
               <div class="grid grid-flow-row content-start justify-start gap-1">
@@ -168,19 +168,58 @@ fetch("data/posts.json")
         const thumbs = fullContent.querySelectorAll(".likes .thumb");
 
         thumbs.forEach(thumb => {
-          thumb.addEventListener("click", () => {
+          let clicked = false;
+
+          thumb.addEventListener("click", (e) => {
             thumb.classList.toggle("ms-filled");
-            
-            const card = thumb.closest(".post-card");
-            
-            const postId = card.dataset.post;
-            
-            console.log(postId);
+
+            if (clicked) {
+              const card = e.target.closest(".content-blob");
+
+              if (card) {
+                const postId = card.dataset.post;
+                const matchingObj = Object.values(data).find(p => p.id == postId);
+                matchingObj.likes -1;
+
+                const likesCount = card.querySelector(".likes-count");
+
+                likesCount.textContent = matchingObj.likes -1;
+              } else {
+                console.log("Not found!");
+              }
+            } else {
+              clicked = true;
+
+              const card = e.target.closest(".content-blob");
+
+              if (card) {
+                const postId = card.dataset.post;
+                const matchingObj = Object.values(data).find(p => p.id == postId);
+                matchingObj.likes += 1;
+                
+                fetch("https://mendsxyz.github.io/vern-db/db.json", {
+                  method: "PUT",
+                  headers: {
+                    "Content-Type": "application/json"
+                  },
+                  body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(updatedData => console.log(updatedData))
+                .catch(err => console.log(err));
+
+                const likesCount = card.querySelector(".likes-count");
+
+                likesCount.textContent = matchingObj.likes;
+              } else {
+                console.log("Not found!");
+              }
+            }
           })
         });
-        
+
         // Favoriting content
-        
+
         const favs = fullContent.querySelectorAll(".favorites .fav");
 
         favs.forEach(fav => {
@@ -188,9 +227,9 @@ fetch("data/posts.json")
             fav.classList.toggle("ms-filled");
           })
         });
-        
+
         // Collapsing full content
-        
+
         collapseContent.addEventListener("click", () => {
           fullContent.classList.remove("active");
 
