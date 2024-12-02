@@ -111,7 +111,7 @@ const collapseContent = fullContent.querySelector(".collapse-content");
 
 let content;
 
-fetch("https://jsonkeeper.com/b/MBJ5")
+fetch("https://mendsxyz.github.io/vern-db/db.json")
   .then((response) => response.json())
   .then(data => {
     renderCards(data);
@@ -198,16 +198,13 @@ fetch("https://jsonkeeper.com/b/MBJ5")
                 matchingObj.likes += 1;
                 
                 const jsonData = JSON.stringify(matchingObj, null, 2);
-                const encodedJsonData = btoa(jsonData);
                 
-                const token = "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";
-                
-                fetch("", {
+                fetch("https://mendsxyz.github.io/vern-db/db.json", {
                   method: "POST",
                   headers: {
                     "Content-Type": "application/json"
                   },
-                  body: encodedJsonData
+                  body: jsonData
                 })
                 .then(response => response.json())
                 .then(updatedData => console.log(updatedData))
