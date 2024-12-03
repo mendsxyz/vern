@@ -106,3 +106,12 @@ main:has(.full-content.active) .content {
 .thumb.ms-filled, .fav.ms-filled {
   color: #DF0F0F;
 }
+
+/* For mobile devices */
+@media only screen and (max-width: 768px) {
+  #editor {
+    width: 100%; /* Keep the width fixed */
+    -webkit-text-size-adjust: none; /* For iOS devices */
+    text-size-adjust: none; /* For Android devices */
+  }
+}

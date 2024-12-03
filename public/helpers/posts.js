@@ -2,165 +2,125 @@
 
 const post = {
   form: document.querySelector(".post-form form"),
-  ct: document.querySelector(".post-form form .post-content")
+  components: document.querySelector(".post-form .post-components"),
+  add_image: document.querySelector(".add-image"),
+  image_upload: document.querySelector("#imageUpload"),
+  image_display: document.querySelector("#imageDisplay"),
+  add_body: document.querySelector(".add-body"),
+
+  json_visualizer: document.querySelector(".json-visualizer")
 }
 
-let id_ = localStorage.getItem("addedBodyId");
-id_ ? (id_ = JSON.parse(id_)) : id_ = [];
+// POST_JSON
 
-const ct = {
-  header: post.form.querySelector("#postHeader"),
-  body: post.form.querySelector("#postBody"),
-  addImage: post.form.querySelector("#addImage"),
-  addText: post.form.querySelector("#addText")
+const post_json = {
+  "id": Math.floor(5000 * Math.random()).toFixed(0),
+  "header": "",
+  "subtitle": "",
+  "image": "",
+  "body": "",
 }
+
+// Add image
+
+post.add_image.addEventListener("click", () => {
+
+});
+
+post.image_upload.addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  const reader = new FileReader();
+
+  reader.onload = (e) => {
+    post.image_display.src = e.target.result;
+  };
+
+  reader.readAsDataURL(file);
+});
+
+// Extra body
+
+post.add_body.addEventListener("click", (e) => {
+  e.preventDefault();
+
+  const newBody = ` 
+    <div class="body w-full border border-solid"> 
+      <input type="text" id="bodyText" hidden> 
+      <div id="bodyTextarea" class="w-full px-3 py-2 font-light text-2sm" contenteditable="true"></div> 
+    </div> 
+  `;
+
+  post.components.insertAdjacentHTML("beforeend", newBody);
+});
+
+let extraBodyCount = 0;
+
+function addExtraProperty() {
+  extraBodyCount = 0;
+
+  const bodyTextareas = document.querySelectorAll("#bodyTextarea:not(.main-body-textarea)");
+
+  bodyTextareas.forEach((textarea) => {
+    if (textarea.textContent.trim() !== "") {
+      extraBodyCount++;
+      const propName = `extra_body_${extraBodyCount}`;
+      post_json[propName] = textarea.textContent;
+    }
+  });
+
+  localStorage.setItem("post_json", JSON.stringify(post_json));
+}
+
+// Posting
 
 post.form.addEventListener("submit", (e) => {
   e.preventDefault();
 
-  /*
-  const textareas = {
-    header: document.querySelector("#postHeaderTextarea").textContent,
-    body: document.querySelector("#postBodyTextarea").textContent,
-    images: Array.from(document.querySelectorAll(".output"))
-  }
+  extraBodyCount++;
 
-  const addedBodies = {};
-  id_.forEach((id) => {
-    const textarea = document.querySelector(`#postBodyTextarea-${id}`);
-    if (textarea) {
-      addedBodies[`body${id}`] = textarea.textContent;
-    }
-  })
+  const header = document.querySelector("#headerTextarea").textContent;
+  const subtitle = document.querySelector("#subtitleTextarea").textContent;
+  const image = document.querySelector("#imageDisplay").getAttribute("src");
+  const body = document.querySelector("#bodyTextarea").innerText;
 
-  ct.header.value = textareas.header;
-  ct.body.value = textareas.body;
+  post_json.header = header;
+  post_json.subtitle = subtitle;
+  post_json.image = image;
+  post_json.body = body + "<br>";
 
-  Object.keys(addedBodies).forEach((key) => {
-    const addedBodyInput = post.form.querySelector(`#postBody-${key.replace('body', '')}`);
-    if (addedBodyInput) {
-      addedBodyInput.value = addedBodies[key];
-    }
-  });
+  addExtraProperty();
+
+  const json_html = document.querySelector(".json-to-html");
+
+  const json_html_header = json_html.querySelector(".header-text");
+  json_html_header.textContent = post_json.header;
+
+  const json_html_subtitle = json_html.querySelector(".subtitle-text");
+  json_html_subtitle.textContent = post_json.subtitle;
+
+  const json_html_image = json_html.querySelector(".image-display");
+  json_html_image.setAttribute("src", post_json.image);
+
+  const json_html_body = json_html.querySelector(".body-text");
+  json_html_body.innerHTML = post_json.body;
+
+  // Loop through extra_body properties and append them to json_html_body
   
-  const addedBody = Object.values(addedBodies).join("\n");
-
-  // alert(ct.header.value + "\n" + ct.body.value + "\n" + addedBody);
-  
-  const newPost = {
-    "id": Math.floor(500 * Math.random()).toFixed(0),
-    "header": ct.header.value,
-    "body": ct.body.value + "\n" + addedBody,
-    "images": textareas.images.map(img => img.getAttribute("src")),
-    "impressions": 0,
-    "likes": 0,
-    "favorites": 0
-  }
-  
-  console.log(newPost);
-  */
-
-  const textareas = {
-    header: document.querySelector("#postHeaderTextarea").textContent,
-    body: document.querySelector("#postBodyTextarea").textContent,
-  }
-
-  const addedBodies = {};
-  id_.forEach((id) => {
-    const textarea = document.querySelector(`#postBodyTextarea-${id}`);
-    if (textarea) {
-      addedBodies[`body${id}`] = textarea.textContent;
+  for (let i = 1; i <= extraBodyCount; i++) {
+    const extraBodyProp = `extra_body_${i}`;
+    if (post_json[extraBodyProp]) {
+      json_html_body.insertAdjacentText("beforeend", post_json[extraBodyProp]);
     }
-  });
-
-  async function createNewPost() {
-    const elements = Array.from(document.querySelector(".post-content").children);
-    const bodyElements = await Promise.all(elements.map(async (element) => {
-      if (element.tagName === "IMG") {
-        const response = await fetch(element.src);
-        const blob = await response.blob();
-        const reader = new FileReader();
-        return new Promise((resolve) => {
-          reader.onload = () => {
-            resolve(reader.result);
-          };
-          reader.readAsDataURL(blob);
-        });
-      } else if (element.tagName === "input") {
-        return element.value;
-      }
-    }));
-    const newPost = {
-      "id": Math.floor(500 * Math.random()).toFixed(0),
-      "header": textareas.header,
-      "body": bodyElements.join("\n"),
-      "impressions": 0,
-      "likes": 0,
-      "favorites": 0
-    }
-    console.log(newPost);
   }
 
-  createNewPost();
+  post.json_visualizer.innerHTML = JSON.stringify(post_json);
 });
 
-// Adding images
+// Get saved_post_json localStorage Object and overwrite post_json Object
 
-ct.addImage.addEventListener("click", () => {
-  const id = Math.floor(500 * Math.random()).toFixed(0);
-
-  let imageUpload = `
-    <div class="image-upload w-full flex items-center justify-center flex-col gap-3">
-      <input type="file" accept="image/*" class="image-inp" id="image-${id}" style="display: none;">
-      <div class="w-full flex items-center justify-center gap-2">
-        <label for="image-${id}" class="flex items-center justify-center px-6 py-2 bg-red-300 gap-2 rounded-lg">
-          <span class="text-2sm font-normal">Upload image</span>
-          <span class="ms-rounded sm">ios_share</span>
-        </label>
-        <button class="remove-image w-10 h-10 rounded-full border border-2 border-red-300 flex items-center justify-center">
-          <span class="ms-rounded text-red-300 font-bold">close</span>
-        </button>
-      </div>
-      <img class="output w-full rounded-lg">
-    </div>
-  `;
-
-  post.ct.insertAdjacentHTML("beforeend", imageUpload);
-
-  const imageInp = post.ct.querySelectorAll(".image-inp");
-  const imageOutput = post.ct.querySelectorAll(".output");
-
-  const loadFile = function(event) {
-    event.preventDefault();
-    const index = Array.prototype.indexOf.call(imageInp, event.target);
-    imageOutput[index].src = URL.createObjectURL(event.target.files[0]);
-  };
-
-  imageInp.forEach((inp, index) => {
-    inp.addEventListener("change", loadFile);
-  });
-
-  // Removing images
-
-  post.ct.addEventListener("click", (e) => {
-    if (e.target.classList.contains("remove-image")) {
-      const imageBlobToRemove = e.target.closest(".image-upload");
-      imageBlobToRemove.remove();
-    }
-  })
-});
-
-// Adding textbox
-
-ct.addText.addEventListener("click", () => {
-  const id = Math.floor(500 * Math.random()).toFixed(0);
-  id_.push(id);
-  localStorage.setItem("addedBodyId", JSON.stringify(id_));
-
-  let newTextbox = `
-    <input type="text" name="Post body" id="postBody-${id}" hidden>
-    <div id="postBodyTextarea-${id}" class="w-full bg-gray-100 pl-3 py-2 h-40 border-l border-solid font-light" contenteditable="true"></div>
-  `;
-
-  post.ct.insertAdjacentHTML("beforeend", newTextbox);
-});
+const saved_post_json = localStorage.getItem("post_json");
+if (saved_post_json) {
+  post_json = JSON.parse(saved_post_json);
+} else {
+  console.warn("No saved post_json Object found");
+}

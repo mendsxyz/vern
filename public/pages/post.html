@@ -4,7 +4,7 @@
 <head>
   <title>Vern — Get reading</title>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <meta name="description" content="Vern is your top go-to source for crypto, tech and politics news, analysis and opinions. Stay ahead of the curve with our expert insights!">
   <meta name="keywords" content="Crypto, Tech, Politics">
   <link rel="canonical" href="(link unavailable)">
@@ -18,14 +18,18 @@
   <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
   <link rel="stylesheet" href="../assets/icon/ms.css">
   <link rel="stylesheet" href="../main.css">
-  <script src="https://cdn.ckeditor.com/4.25.0-lts/standard/ckeditor.js"></script>
+
+  <!-- Quill text editor cdn links -->
+
+  <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
 </head>
 
 <body>
-  <template>
-    <!-- Verification tick ms icon: new_releases -->
-  </template>
-
   <header class="w-full bg-white px-6 py-3 border-b border-solid flex items-center justify-between fixed top-0 left-0 z-20">
     <div class="grid grid-flow-col auto-cols-max items-center justify-items-start gap-4">
       <img src="../assets/favicon/vern-logo.png" alt="vern logo" class="w-8">
@@ -63,29 +67,31 @@
         <img src="../assets/img/pfp.png" alt="author's profile image" class="w-8 rounded-full">
         <span class="text-2md font-semibold">Posting as Mends</span>
       </div>
-      <form>
-        <div class="post-content w-full flex flex-col items-start justify-center gap-3">
-          <label for="postHeader" class="w-full flex items-center justify-between">
-            <span class="text-2md">Header</span>&nbsp;
-            <span class="text-sm font-light">— 80 characters max</span>
-          </label>
-          <input type="text" name="Post header" id="postHeader" hidden>
-          <div id="postHeaderTextarea" class="w-full bg-gray-100 pl-3 py-2 border-l border-solid text-2xl font-bold" contenteditable="true"></div>
 
-          <label for="postBody" class="w-full flex items-center justify-between">
-            <span class="text-2md">Body</span>&nbsp;
-            <span class="text-sm font-light">— 500 characters min</span>
-          </label>
-          <input type="text" name="Post body" id="postBody" hidden>
-          <textarea name="content" id="postBodyTextarea" class="w-full bg-gray-100 pl-3 py-2 h-40 border-l border-solid font-light"></textarea>
+      <form enctype="multipart/form-data">
+        <div class="post-components w-full flex flex-col items-start justify-center gap-3">
+          <div class="header w-full border border-solid">
+            <input type="text" id="headerText" hidden>
+            <div id="headerTextarea" class="w-full px-3 py-2 text-3xl" contenteditable="true"></div>
+          </div>
+          <div class="subtitle w-full border border-solid">
+            <input type="text" id="subtitleText" hidden>
+            <div id="subtitleTextarea" class="w-full px-3 py-2 text-xl font-light" contenteditable="true"></div>
+          </div>
+          <div class="image w-full flex flex-col items-center justify-center gap-3">
+            <label for="imageUpload" class="add-image w-full flex items-center justify-center border border-solid border-red-600 text-red-600 px-4 py-2 rounded-lg">
+              <span class="ms-rounded">image</span>
+            </label>
+            <input type="file" accept="image*/" name="image" id="imageUpload" style="display: none;">
+            <img class="w-full rounded-lg" id="imageDisplay">
+          </div>
+          <div class="body w-full border border-solid">
+            <input type="text" id="bodyText" hidden>
+            <div id="bodyTextarea" class="main-body-textarea w-full px-3 py-2 font-light text-2sm" contenteditable="true"></div>
+          </div>
         </div>
         <div class="w-full grid grid-flow-col gap-3 mt-4">
-          <button id="addImage" class="py-2 px-4 border border-solid border-red-300 text-red-600 flex items-center justify-center gap-2 rounded-lg">
-            <span class="text-2sm">Add image</span>
-            <span class="ms-rounded">image</span>
-          </button>
-          <button id="addText" class="py-2 px-4 border border-solid border-red-300 text-red-600 flex items-center justify-center gap-2 rounded-lg">
-            <span class="text-2sm">Add text</span>
+          <button class="add-body w-full px-4 py-2 border border-solid border-red-600 text-red-600 flex items-center justify-center gap-2 rounded-lg">
             <span class="ms-rounded">add_notes</span>
           </button>
         </div>
@@ -95,13 +101,31 @@
             <span class="ms-rounded">add</span>
           </button>
         </div>
+        
+        <div class="json-to-html w-full flex flex-col items-start justify-left gap-3 border border-solid p-4 mt-4">
+          <span class="header-text text-3xl font-semibold"></span>
+          <span class="subtitle-text text-xl text-gray-600 font-light"></span>
+          <img class="image-display w-full rounded-lg" alt="post image">
+          <span class="body-text text-lg font-light"></span>
+        </div>
+        
+        <div class="json-visualizer w-full border border-solid p-4 mt-4 text-sm overflow-y-auto whitespace-pre-line break-words"></div>
       </form>
     </div>
   </main>
   <script src="../main.js"></script>
   <script src="../helpers/posts.js"></script>
+
+  <!-- Initialize Quill editor -->
   <script>
-    CKEDITOR.replace("content");
+    const quill = new Quill('#editor', {
+      modules: {
+        syntax: true,
+        toolbar: '#toolbar-container',
+      },
+      placeholder: 'Compose an epic...',
+      theme: 'snow',
+    });
   </script>
 </body>
 
