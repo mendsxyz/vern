@@ -23,10 +23,6 @@ const post_json = {
 
 // Add image
 
-post.add_image.addEventListener("click", () => {
-
-});
-
 post.image_upload.addEventListener("change", (e) => {
   const file = e.target.files[0];
   const reader = new FileReader();

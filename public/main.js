@@ -204,7 +204,7 @@ fetch("https://mendsxyz.github.io/vern-db/db.json")
                 const jsonData = JSON.stringify(matchingObj, null, 2);
                 
                 fetch("https://mendsxyz.github.io/vern-db/db.json", {
-                  method: "POST",
+                  method: "PUT",
                   headers: {
                     "Content-Type": "application/json"
                   },
